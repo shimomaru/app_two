@@ -57,10 +57,18 @@ class _LoginViewState extends State<LoginView> {
                   email: email,
                   password: password,
                 );
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  notesRoute,
-                  (route) => false,
-                );
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    notesRoute,
+                    (route) => false,
+                  );
+                } else {
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute,
+                    (route) => false,
+                  );
+                }
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
                   await showErrorDialog(
@@ -71,11 +79,6 @@ class _LoginViewState extends State<LoginView> {
                   await showErrorDialog(
                     context,
                     'Wrong credentials',
-                  );
-                } else if (e.code == 'too-many-requests') {
-                  await showErrorDialog(
-                    context,
-                    'Too many requests. Try again later',
                   );
                 } else {
                   await showErrorDialog(
