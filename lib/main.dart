@@ -5,22 +5,25 @@ import 'package:app_two/views/notes_view.dart';
 import 'package:app_two/views/register_view.dart';
 import 'package:app_two/views/verify_email_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    MaterialApp(
-      title: 'Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    Phoenix(
+      child: MaterialApp(
+        title: 'Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: const HomePage(),
+        routes: {
+          loginRoute: (context) => const LoginView(),
+          registerRoute: (context) => const RegisterView(),
+          notesRoute: (context) => const NotesView(),
+          verifyEmailRoute: (context) => const VerifyEmailView(),
+        },
       ),
-      home: const HomePage(),
-      routes: {
-        loginRoute: (context) => const LoginView(),
-        registerRoute: (context) => const RegisterView(),
-        notesRoute: (context) => const NotesView(),
-        verifyEmailRoute: (context) => const VerifyEmailView(),
-      },
     ),
   );
 }
@@ -53,3 +56,34 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
+// class RestartWidget extends StatefulWidget {
+//   RestartWidget({required this.child});
+
+//   final Widget child;
+
+//   static void restartApp(BuildContext context) {
+//     context.findAncestorStateOfType<_RestartWidgetState>()?.restartApp();
+//   }
+
+//   @override
+//   _RestartWidgetState createState() => _RestartWidgetState();
+// }
+
+// class _RestartWidgetState extends State<RestartWidget> {
+//   Key key = UniqueKey();
+
+//   void restartApp() {
+//     setState(() {
+//       key = UniqueKey();
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return KeyedSubtree(
+//       key: key,
+//       child: widget.child,
+//     );
+//   }
+// }

@@ -1,6 +1,7 @@
 import 'package:app_two/lib/constants/routes.dart';
 import 'package:app_two/lib/enums/menu_action.dart';
 import 'package:app_two/lib/services/auth/auth_service.dart';
+import 'package:app_two/lib/services/auth/crud/notes_service.dart';
 import 'package:flutter/material.dart';
 
 class NotesView extends StatefulWidget {
@@ -11,6 +12,31 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
+  // late Future _myFuture;
+  late final NotesService _notesService;
+  String get userEmail => AuthService.firebase().currentUser!.email!;
+
+  @override
+  void initState() {
+    super.initState();
+    _notesService = NotesService();
+    // getGet() async {
+    //   return await _notesService.getOrCreateUser(email: userEmail);
+    // }
+
+    // _myFuture = getGet();
+  }
+
+  @override
+  void dispose() {
+    _notesService.close();
+    super.dispose();
+  }
+
+  // getGet() async {
+  //   return await _notesService.getOrCreateUser(email: userEmail);
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,31 +68,51 @@ class _NotesViewState extends State<NotesView> {
           )
         ],
       ),
-      body: const Text('Hello'),
+      body: FutureBuilder(
+        future: _notesService.getOrCreateUser(email: userEmail),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return StreamBuilder(
+                stream: _notesService.allNotes,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const Text('Waiting for all notes...');
+                    default:
+                      return const CircularProgressIndicator();
+                  }
+                },
+              );
+            default:
+              return const CircularProgressIndicator();
+          }
+        },
+      ),
     );
   }
-}
 
-Future<bool> showLogOutDialog(BuildContext context) {
-  return showDialog<bool>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text('Sign out'),
-        content: const Text('Are you sure you want to sign out?'),
-        actions: [
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: const Text('Cancel')),
-          TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text('Logout'))
-        ],
-      );
-    },
-  ).then((value) => value ?? false);
+  Future<bool> showLogOutDialog(BuildContext context) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Sign out'),
+          content: const Text('Are you sure you want to sign out?'),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: const Text('Cancel')),
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('Logout'))
+          ],
+        );
+      },
+    ).then((value) => value ?? false);
+  }
 }

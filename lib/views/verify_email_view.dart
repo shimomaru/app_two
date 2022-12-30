@@ -1,6 +1,7 @@
 import 'package:app_two/lib/constants/routes.dart';
 import 'package:app_two/lib/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:restart_app/restart_app.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
@@ -31,7 +32,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             onPressed: () async {
               await AuthService.firebase().logOut();
               Navigator.of(context).pushNamedAndRemoveUntil(
-                registerRoute,
+                loginRoute,
                 (route) => false,
               );
             },

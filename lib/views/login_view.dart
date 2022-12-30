@@ -1,8 +1,10 @@
 import 'package:app_two/lib/constants/routes.dart';
 import 'package:app_two/lib/services/auth/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:app_two/lib/utilities/show_error_dialog.dart';
 import 'package:app_two/lib/services/auth/auth_exceptions.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -38,28 +40,26 @@ class _LoginViewState extends State<LoginView> {
           TextField(
             controller: _email,
             keyboardType: TextInputType.emailAddress,
-            decoration:
-                const InputDecoration(hintText: 'Enter your email, peasant'),
+            decoration: const InputDecoration(hintText: 'Enter your email'),
           ),
           TextField(
             controller: _password,
             obscureText: true,
             enableSuggestions: false,
             autocorrect: false,
-            decoration:
-                const InputDecoration(hintText: 'Enter your password, peasant'),
+            decoration: const InputDecoration(hintText: 'Enter your password'),
           ),
           TextButton(
             onPressed: () async {
               final email = _email.text;
               final password = _password.text;
               try {
-                AuthService.firebase().logIn(
+                await AuthService.firebase().logIn(
                   email: email,
                   password: password,
                 );
                 final user = AuthService.firebase().currentUser;
-                if (user?.isEmailVerified ?? false) {
+                if (user?.isEmailVerified == true) {
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
                     (route) => false,
