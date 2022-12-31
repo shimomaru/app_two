@@ -12,7 +12,7 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
-  // late Future _myFuture;
+  late Future _myFuture;
   late final NotesService _notesService;
   String get userEmail => AuthService.firebase().currentUser!.email!;
 
@@ -20,11 +20,7 @@ class _NotesViewState extends State<NotesView> {
   void initState() {
     super.initState();
     _notesService = NotesService();
-    // getGet() async {
-    //   return await _notesService.getOrCreateUser(email: userEmail);
-    // }
-
-    // _myFuture = getGet();
+    _myFuture = getGet();
   }
 
   @override
@@ -33,16 +29,22 @@ class _NotesViewState extends State<NotesView> {
     super.dispose();
   }
 
-  // getGet() async {
-  //   return await _notesService.getOrCreateUser(email: userEmail);
-  // }
+  getGet() async {
+    return await _notesService.getOrCreateUser(email: userEmail);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Main UI'),
+        title: const Text('Your Notes'),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(newNoteRoute);
+            },
+            icon: const Icon(Icons.add),
+          ),
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               switch (value) {
@@ -69,7 +71,7 @@ class _NotesViewState extends State<NotesView> {
         ],
       ),
       body: FutureBuilder(
-        future: _notesService.getOrCreateUser(email: userEmail),
+        future: _myFuture,
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
