@@ -11,6 +11,7 @@ class NewNoteView extends StatefulWidget {
 
 class _NewNoteViewState extends State<NewNoteView> {
   DatabaseNote? _note;
+  late Future _myFuture;
   late final NotesService _notesService;
   late final TextEditingController _textController;
 
@@ -45,9 +46,10 @@ class _NewNoteViewState extends State<NewNoteView> {
 
   @override //initialize
   void initState() {
+    super.initState();
     _notesService = NotesService();
     _textController = TextEditingController();
-    super.initState();
+    _myFuture = getGet();
   }
 
   void _textControllerListener() async {
@@ -76,6 +78,10 @@ class _NewNoteViewState extends State<NewNoteView> {
     super.dispose();
   }
 
+  getGet() async {
+    return await createNewNote();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +89,7 @@ class _NewNoteViewState extends State<NewNoteView> {
         title: const Text('New Note'),
       ),
       body: FutureBuilder(
-          future: createNewNote(),
+          future: _myFuture,
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.done:

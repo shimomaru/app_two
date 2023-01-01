@@ -51,6 +51,7 @@ dependencies:
   path: ^1.8.2
   restart_app: ^1.1.1+1
   flutter_phoenix: ^1.1.0
+  rive: ^0.10.0
 
 dev_dependencies:
   flutter_test:
