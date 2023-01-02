@@ -35,7 +35,6 @@ class NotesService {
     } on DatabaseIsNotOpen {
       open();
     } catch (e) {
-      print(e.toString());
       rethrow;
     }
   }

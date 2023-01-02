@@ -1,10 +1,8 @@
 import 'package:app_two/lib/constants/routes.dart';
 import 'package:app_two/lib/services/auth/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:app_two/lib/utilities/dialogs/error_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:app_two/lib/utilities/show_error_dialog.dart';
 import 'package:app_two/lib/services/auth/auth_exceptions.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
